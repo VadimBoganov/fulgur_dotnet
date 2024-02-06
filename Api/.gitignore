@@ -399,3 +399,4 @@ FodyWeavers.xsd
 
 *.db
 fulgur.db-shm
+fulgur.db-wal
