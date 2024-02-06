@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen(opts =>
 
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IProductTypesService, ProductTypesService>();
+builder.Services.AddScoped<IProductSubTypeService, ProductSubTypeService>();
 
 builder.Services.AddRouting(opts => opts.LowercaseUrls = true);
 
