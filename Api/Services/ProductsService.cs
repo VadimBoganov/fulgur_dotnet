@@ -21,7 +21,7 @@ namespace Api.Services
         {
             var prod = await _adminContext.Products.FindAsync(id);
 
-            if (prod == null) 
+            if (prod == null)
                 return null;
 
             prod.Name = product.Name;
