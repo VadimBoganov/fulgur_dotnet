@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update([FromBody]ProductItem productItem, IFormFile file)
+        public async Task<ActionResult> Update(ProductItem productItem, IFormFile file)
         {
             var pi = await _service.Update(productItem, file);
 

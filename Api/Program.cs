@@ -1,16 +1,61 @@
 using Api;
 using Api.Models;
 using Api.Services;
-using FluentFTP;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opts =>
+    {
+#pragma warning disable CS8604 // Possible null reference argument.
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["Auth:Issuer"],
+            ValidAudience = builder.Configuration["Auth:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Auth:SecretKey"])),
+            ValidateIssuerSigningKey = true
+        };
+#pragma warning restore CS8604 // Possible null reference argument.
+    });
 
 builder.Services.AddDbContext<AdminContext>();
 
-builder.Services.AddSwaggerGen(opts => opts.EnableAnnotations());
+builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen(opts => 
+{
+    opts.EnableAnnotations();
+    opts.SwaggerDoc("v1", new OpenApiInfo { Title = "fulgur api", Version = "v1" });
+    opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IProductTypesService, ProductTypesService>();
@@ -32,6 +77,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStatusCodePages();
 
