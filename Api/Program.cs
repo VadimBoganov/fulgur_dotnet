@@ -1,5 +1,7 @@
+using Api;
 using Api.Models;
 using Api.Services;
+using FluentFTP;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,14 +10,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AdminContext>();
 
-builder.Services.AddSwaggerGen(opts =>
-{
-    opts.EnableAnnotations();
-});
+builder.Services.AddSwaggerGen(opts => opts.EnableAnnotations());
 
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IProductTypesService, ProductTypesService>();
 builder.Services.AddScoped<IProductSubTypeService, ProductSubTypeService>();
+builder.Services.AddScoped<IProductItemService, ProductItemService>();
+
+builder.Services.AddFtpClient(builder.Configuration);
 
 builder.Services.AddRouting(opts => opts.LowercaseUrls = true);
 

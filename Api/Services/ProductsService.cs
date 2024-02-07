@@ -9,8 +9,11 @@ namespace Api.Services
 
         public async Task<IEnumerable<Product>> GetAll() => await _adminContext.Products.ToListAsync();
 
-        public async Task<Product> Add(Product product)
+        public async Task<Product?> Add(Product product)
         {
+            if (product == null)
+                return null;
+
             _adminContext.Products.Add(product);
             await _adminContext.SaveChangesAsync();
 
@@ -19,6 +22,9 @@ namespace Api.Services
 
         public async Task<Product?> Update(int id, Product product)
         {
+            if (product == null)
+                return null;
+
             var prod = await _adminContext.Products.FindAsync(id);
 
             if (prod == null)

@@ -11,8 +11,11 @@ namespace Api.Services
 
         public async Task<ProductType?> GetByProductId(int productId) => await _adminContext.ProductTypes.FirstOrDefaultAsync(pt => pt.ProductId == productId);
 
-        public async Task<ProductType> Add(ProductType productType)
+        public async Task<ProductType?> Add(ProductType productType)
         {
+            if (productType == null)
+                return null;
+
             _adminContext.ProductTypes.Add(productType);
             await _adminContext.SaveChangesAsync();
 
@@ -21,6 +24,9 @@ namespace Api.Services
 
         public async Task<ProductType?> Update(int id, ProductType productType)
         {
+            if (productType == null)
+                return null;
+
             var pt = await _adminContext.ProductTypes.FindAsync(id);
 
             if (pt == null)

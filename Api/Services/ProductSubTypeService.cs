@@ -9,8 +9,11 @@ namespace Api.Services
 
         public async Task<IEnumerable<ProductSubType>> GetAll() => await _adminContext.ProductSubTypes.ToListAsync();
 
-        public async Task<ProductSubType> Add(ProductSubType productSubType)
+        public async Task<ProductSubType?> Add(ProductSubType productSubType)
         {
+            if (productSubType == null)
+                return null;
+
             _adminContext.ProductSubTypes.Add(productSubType);
             await _adminContext.SaveChangesAsync();
 
@@ -19,6 +22,9 @@ namespace Api.Services
 
         public async Task<ProductSubType?> Update(int id, ProductSubType productSubType)
         {
+            if (productSubType == null)
+                return null;
+
             var pst = await _adminContext.ProductSubTypes.FindAsync(id);
 
             if (pst == null)
