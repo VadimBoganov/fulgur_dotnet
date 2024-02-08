@@ -9,6 +9,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opts =>
@@ -57,6 +60,20 @@ builder.Services.AddSwaggerGen(opts =>
     });
 });
 
+var allowSpecificOrigins = "_allowAdminOrigins";
+
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy(allowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        });
+});
+
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IProductTypesService, ProductTypesService>();
 builder.Services.AddScoped<IProductSubTypeService, ProductSubTypeService>();
@@ -77,6 +94,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(allowSpecificOrigins);
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();

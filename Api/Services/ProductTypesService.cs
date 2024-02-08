@@ -13,8 +13,7 @@ namespace Api.Services
 
         public async Task<ProductType?> Add(ProductType productType)
         {
-            if (productType == null)
-                return null;
+            if (productType == null) return null;
 
             _adminContext.ProductTypes.Add(productType);
             await _adminContext.SaveChangesAsync();
@@ -22,27 +21,18 @@ namespace Api.Services
             return productType;
         }
 
-        public async Task<ProductType?> Update(int id, ProductType productType)
+        public async Task<ProductType?> Update(ProductType productType)
         {
-            if (productType == null)
-                return null;
+            if (productType == null) return null;
 
-            var pt = await _adminContext.ProductTypes.FindAsync(id);
+            var pt = await _adminContext.ProductTypes.FindAsync(productType.Id);
 
-            if (pt == null)
-                return null;
+            if (pt == null) return null;
 
             pt.ProductId = productType.ProductId;
             pt.Name = productType.Name;
 
-            try
-            {
-                await _adminContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException) when (!_adminContext.ProductTypes.Any(pt => pt.Id == id))
-            {
-                return null;
-            }
+            await _adminContext.SaveChangesAsync();
 
             return pt;
         }
@@ -51,8 +41,7 @@ namespace Api.Services
         {
             var pt = await _adminContext.ProductTypes.FindAsync(id);
 
-            if (pt == null)
-                return null;
+            if (pt == null) return null;
 
             _adminContext.ProductTypes.Remove(pt);
             await _adminContext.SaveChangesAsync();

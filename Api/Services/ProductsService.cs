@@ -11,8 +11,7 @@ namespace Api.Services
 
         public async Task<Product?> Add(Product product)
         {
-            if (product == null)
-                return null;
+            if (product == null) return null;
 
             _adminContext.Products.Add(product);
             await _adminContext.SaveChangesAsync();
@@ -20,26 +19,17 @@ namespace Api.Services
             return product;
         }
 
-        public async Task<Product?> Update(int id, Product product)
+        public async Task<Product?> Update(Product product)
         {
-            if (product == null)
-                return null;
+            if (product == null) return null;
 
-            var prod = await _adminContext.Products.FindAsync(id);
+            var prod = await _adminContext.Products.FindAsync(product.Id);
 
-            if (prod == null)
-                return null;
+            if (prod == null) return null;
 
             prod.Name = product.Name;
 
-            try
-            {
-                await _adminContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException) when (!_adminContext.Products.Any(p => p.Id == id))
-            {
-                return null;
-            }
+            await _adminContext.SaveChangesAsync();
 
             return prod;
         }
@@ -48,8 +38,7 @@ namespace Api.Services
         {
             var product = await _adminContext.Products.FindAsync(id);
 
-            if (product == null)
-                return null;
+            if (product == null) return null;
 
             _adminContext.Products.Remove(product);
             await _adminContext.SaveChangesAsync();

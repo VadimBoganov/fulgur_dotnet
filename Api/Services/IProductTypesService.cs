@@ -8,6 +8,6 @@ namespace Api.Services
         Task<ProductType?> Delete(int id);
         Task<IEnumerable<ProductType>> GetAll();
         Task<ProductType?> GetByProductId(int productId);
-        Task<ProductType?> Update(int id, ProductType productType);
+        Task<ProductType?> Update(ProductType productType);
     }
 }

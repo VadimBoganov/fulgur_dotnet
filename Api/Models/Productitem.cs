@@ -15,7 +15,10 @@ namespace Api.Models
 
         public required string Name { get; set; }
 
+        [NotMapped]
+        public required IFormFile File { get; set; }
+
         [SwaggerSchema(ReadOnly = true)]
-        public required string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

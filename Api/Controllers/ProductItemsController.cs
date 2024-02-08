@@ -1,12 +1,14 @@
 ﻿using Api.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductItemController(IProductItemService service) : ControllerBase
+    [Authorize]
+    public class ProductItemsController(IProductItemService service) : ControllerBase
     {
         private readonly IProductItemService _service = service;
 
@@ -22,17 +24,17 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductItem>> Add(ProductItem productItem, IFormFile file)
+        public async Task<ActionResult<ProductItem>> Add([FromForm] ProductItem productItem)
         {
-            await _service.Add(productItem, file);
+            await _service.Add(productItem);
 
             return CreatedAtAction(nameof(Add), productItem);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update(ProductItem productItem, IFormFile file)
+        public async Task<ActionResult> Update([FromForm] ProductItem productItem)
         {
-            var pi = await _service.Update(productItem, file);
+            var pi = await _service.Update(productItem);
 
             return pi == null ? NotFound() : Ok(pi);
         }

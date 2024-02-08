@@ -1,11 +1,13 @@
 ﻿using Api.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductTypesController(IProductTypesService service) : ControllerBase
     {
         private readonly IProductTypesService _service = service;
@@ -29,10 +31,10 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(Add), productType);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, ProductType productType)
+        [HttpPut]
+        public async Task<ActionResult> Update(ProductType productType)
         {
-            var pt = await _service.Update(id, productType);
+            var pt = await _service.Update(productType);
 
             return pt == null ? NotFound() : Ok(pt);
         }

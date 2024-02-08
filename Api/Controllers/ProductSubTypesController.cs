@@ -1,12 +1,14 @@
 ﻿using Api.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductSubTypeController(IProductSubTypeService service) : ControllerBase
+    [Authorize]
+    public class ProductSubTypesController(IProductSubTypeService service) : ControllerBase
     {
         private readonly IProductSubTypeService _service = service;
 
@@ -21,10 +23,10 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(Add), productSubType);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, ProductSubType productSubType)
+        [HttpPut]
+        public async Task<ActionResult> Update(ProductSubType productSubType)
         {
-            var pst = await _service.Update(id, productSubType);
+            var pst = await _service.Update(productSubType);
 
             return pst == null ? NotFound() : Ok(pst);
         }

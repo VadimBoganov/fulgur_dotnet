@@ -7,6 +7,6 @@ namespace Api.Services
         Task<ProductSubType?> Add(ProductSubType productSubType);
         Task<ProductSubType?> Delete(int id);
         Task<IEnumerable<ProductSubType>> GetAll();
-        Task<ProductSubType?> Update(int id, ProductSubType productSubType);
+        Task<ProductSubType?> Update(ProductSubType productSubType);
     }
 }
