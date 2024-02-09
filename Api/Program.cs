@@ -16,7 +16,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opts =>
     {
-#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8604
         opts.TokenValidationParameters = new TokenValidationParameters
         {
             ValidIssuer = builder.Configuration["Auth:Issuer"],
@@ -24,7 +24,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Auth:SecretKey"])),
             ValidateIssuerSigningKey = true
         };
-#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8604 
     });
 
 builder.Services.AddDbContext<AdminContext>();
@@ -78,6 +78,7 @@ builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IProductTypesService, ProductTypesService>();
 builder.Services.AddScoped<IProductSubTypeService, ProductSubTypeService>();
 builder.Services.AddScoped<IProductItemService, ProductItemService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddFtpClient(builder.Configuration);
 

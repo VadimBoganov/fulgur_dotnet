@@ -9,6 +9,7 @@ namespace Api.Models
         public DbSet<ProductSubType> ProductSubTypes { get; set;}
         public DbSet<ProductItem> ProductItems { get; set;}
         public DbSet<User> Users { get; set;}
+        public DbSet<Item> Items { get; set;}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

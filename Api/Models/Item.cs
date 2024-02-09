@@ -4,21 +4,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models
 {
-    public class ProductItem
+    public class Item
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
 
-        public int ProductSubTypeId { get; set; }
+        public int ProdictItemId { get; set; }
 
         public required string Name { get; set; }
+
+        public decimal Price { get; set; }
 
         [NotMapped]
         public IFormFile? File { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
         public string? ImageUrl { get; set; }
+
+        public bool IsFullPrice { get; set; }
     }
 }

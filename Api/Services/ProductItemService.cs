@@ -1,13 +1,13 @@
 ﻿using Api.Models;
 using FluentFTP;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.Configuration;
 
 namespace Api.Services
 {
-    public class ProductItemService(IConfiguration configuration, ILogger<ProductItemService> logger, IAsyncFtpClient ftpClient, AdminContext adminContext) : IProductItemService
+    public class ProductItemService(IConfiguration configuration, IAsyncFtpClient ftpClient, AdminContext adminContext) : IProductItemService
     {
         private readonly AdminContext _adminContext = adminContext;
-        private readonly ILogger<ProductItemService> _logger = logger;
         private readonly IAsyncFtpClient _ftpClient = ftpClient;
         private readonly IConfiguration _configuration = configuration;
 
@@ -17,25 +17,12 @@ namespace Api.Services
 
         public async Task<ProductItem?> Add(ProductItem productItem)
         {
-            if (productItem == null) return null;
+            ArgumentNullException.ThrowIfNull(productItem, nameof(productItem));
 
             var file = productItem.File;
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var fullPath = $"{_configuration["FTP:ImagePath"]}{fileName}";
 
-            if (file.Length > 0)
-            {
-                var steam = file.OpenReadStream();
-                var status = await _ftpClient.UploadStream(steam, fullPath, FtpRemoteExists.Overwrite);
-
-                if (status != FtpStatus.Success)
-                {
-                    _logger.LogError("Can't upload file to ftp server with status - {status}", status);
-                    return null;
-                }
-            }
-
-            productItem.ImageUrl = _configuration["FTP:Url"] + fileName;
+            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
+                productItem.ImageUrl = _configuration["FTP:Url"] + file.FileName;
 
             _adminContext.ProductItems.Add(productItem);
             await _adminContext.SaveChangesAsync();
@@ -45,29 +32,17 @@ namespace Api.Services
 
         public async Task<ProductItem?> Update(ProductItem productItem)
         {
-            if (productItem == null) return null;
+            ArgumentNullException.ThrowIfNull(productItem, nameof(productItem));
 
             var pi = await _adminContext.ProductItems.FirstOrDefaultAsync(pi => pi.Id == productItem.Id);
 
             if (pi == null) return null;
 
             var file = productItem.File;
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var fullPath = $"{_configuration["FTP:ImagePath"]}{fileName}";
 
-            if (file.Length > 0)
-            {
-                var steam = file.OpenReadStream();
-                var status = await _ftpClient.UploadStream(steam, fullPath, FtpRemoteExists.Overwrite);
-
-                if (status != FtpStatus.Success)
-                {
-                    _logger.LogError("Can't upload file to ftp server with status - {status}", status);
-                    return null;
-                }
-            }
-
-            pi.ImageUrl = _configuration["FTP:Url"] + fileName;
+            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
+                pi.ImageUrl = _configuration["FTP:Url"] + file.FileName;
+            
             pi.Name = productItem.Name;
             pi.ProductSubTypeId = productItem.ProductSubTypeId;
 
@@ -80,8 +55,7 @@ namespace Api.Services
         {
             var pi = await _adminContext.ProductItems.FindAsync(id);
 
-            if (pi == null)
-                return null;
+            if (pi == null) return null;
 
             _adminContext.ProductItems.Remove(pi);
             await _adminContext.SaveChangesAsync();
