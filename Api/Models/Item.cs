@@ -11,11 +11,11 @@ namespace Api.Models
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
 
-        public int ProdictItemId { get; set; }
+        public int ProductItemId { get; set; }
 
         public required string Name { get; set; }
 
-        public decimal Price { get; set; }
+        public float Price { get; set; }
 
         [NotMapped]
         public IFormFile? File { get; set; }

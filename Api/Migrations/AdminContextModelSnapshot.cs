@@ -35,7 +35,7 @@ namespace Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProdictItemId")
+                    b.Property<int>("ProductItemId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AdminContext))]
-    [Migration("20240209105426_AddItemsTable")]
+    [Migration("20240209135328_AddItemsTable")]
     partial class AddItemsTable
     {
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProdictItemId")
+                    b.Property<int>("ProductItemId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
