@@ -1,12 +1,14 @@
 ﻿using Api.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController(IProductsService service) : ControllerBase
+    [Authorize]
+    public class ProductsController(IProductsService service) : ControllerBase
     {
         private readonly IProductsService _service = service;
 
@@ -14,21 +16,22 @@ namespace Api.Controllers
         public async Task<IEnumerable<Product>> GetAll() => await _service.GetAll();
 
         [HttpPost]
-        public async Task<ActionResult<Product>> Add([FromBody] Product product)
+        public async Task<ActionResult<Product>> Add(Product product)
         {
             await _service.Add(product);
 
             return CreatedAtAction(nameof(Add), product);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Product product)
+        
+        [HttpPut]
+        public async Task<ActionResult> Update(Product product)
         {
-            var prod = await _service.Update(id, product);
+            var prod = await _service.Update(product);
 
             return prod == null ? NotFound() : Ok(prod);
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
