@@ -14,23 +14,13 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<Item>> GetAll() => await _service.GetAll();
 
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<Item>> GetById(int id)
-        {
-            var item = await _service.GetById(id);
-
-            return item == null ? NotFound() : Ok(item);
-        }
+        [HttpGet("{productItemId}")]
+        public async Task<ActionResult<IEnumerable<Item>>> GetByProductItemId(int productItemId) =>
+            await _service.GetByProductItemId(productItemId) == null ? NotFound() : Ok();
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Item>> Add([FromForm] Item item)
-        {
-            await _service.Add(item);
-
-            return CreatedAtAction(nameof(Add), item);
-        }
+        public async Task<ActionResult<Item>> Add([FromForm] Item item) => CreatedAtAction(nameof(Add), await _service.Add(item));
 
         [HttpPut]
         [Authorize]

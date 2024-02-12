@@ -7,7 +7,6 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ProductItemsController(IProductItemService service) : ControllerBase
     {
         private readonly IProductItemService _service = service;
@@ -24,6 +23,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ProductItem>> Add([FromForm] ProductItem productItem)
         {
             await _service.Add(productItem);
@@ -32,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult> Update([FromForm] ProductItem productItem)
         {
             var pi = await _service.Update(productItem);
@@ -40,6 +41,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             var pi = await _service.Delete(id);

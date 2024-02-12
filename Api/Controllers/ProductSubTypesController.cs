@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
+    [Route("api/[controller]")]    
     public class ProductSubTypesController(IProductSubTypeService service) : ControllerBase
     {
         private readonly IProductSubTypeService _service = service;
@@ -16,6 +15,7 @@ namespace Api.Controllers
         public async Task<IEnumerable<ProductSubType>> GetAll() => await _service.GetAll();
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ProductSubType>> Add([FromBody] ProductSubType productSubType)
         {
             await _service.Add(productSubType);
@@ -24,6 +24,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult> Update(ProductSubType productSubType)
         {
             var pst = await _service.Update(productSubType);
@@ -32,6 +33,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             var pst = await _service.Delete(id);

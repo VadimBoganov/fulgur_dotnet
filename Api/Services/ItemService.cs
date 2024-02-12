@@ -14,7 +14,7 @@ namespace Api.Services
 
         public async Task<IEnumerable<Item>> GetAll() => await _adminContext.Items.ToListAsync();
 
-        public async Task<Item?> GetById(int id) => await _adminContext.Items.FirstOrDefaultAsync(i => i.Id == id);
+        public async Task<IEnumerable<Item>> GetByProductItemId(int id) => await _adminContext.Items.Where(i => i.ProductItemId == id).ToListAsync();
 
         public async Task<Item?> Add(Item item)
         {

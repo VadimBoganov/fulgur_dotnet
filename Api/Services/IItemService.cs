@@ -7,7 +7,7 @@ namespace Api.Services
         Task<Item?> Add(Item item);
         Task<Item?> Delete(int id);
         Task<IEnumerable<Item>> GetAll();
-        Task<Item?> GetById(int id);
+        Task<IEnumerable<Item>> GetByProductItemId(int id);
         Task<Item?> Update(Item inputItem);
     }
 }
