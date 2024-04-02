@@ -12,5 +12,6 @@ namespace Api.Models
         public int Id { get; set; }
         public int ProductTypeId { get; set; }
         public required string Name { get; set; }
+        public string? Link { get; set; }
     }
 }

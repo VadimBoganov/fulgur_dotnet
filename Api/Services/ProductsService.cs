@@ -28,6 +28,7 @@ namespace Api.Services
             if (prod == null) return null;
 
             prod.Name = product.Name;
+            prod.Link = product.Link;
 
             await _adminContext.SaveChangesAsync();
 

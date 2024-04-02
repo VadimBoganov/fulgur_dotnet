@@ -11,6 +11,8 @@ namespace Api.Models
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
 
+        public int ProductTypeId { get; set; }
+
         public int ProductSubTypeId { get; set; }
 
         public required string Name { get; set; }
@@ -20,5 +22,7 @@ namespace Api.Models
 
         [SwaggerSchema(ReadOnly = true)]
         public string? ImageUrl { get; set; }
+
+        public string? Link {  get; set; }
     }
 }

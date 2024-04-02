@@ -24,5 +24,7 @@ namespace Api.Models
         public string? ImageUrl { get; set; }
 
         public bool IsFullPrice { get; set; }
+
+        public string? Link { get; set; }
     }
 }

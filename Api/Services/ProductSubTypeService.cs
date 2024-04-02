@@ -29,6 +29,7 @@ namespace Api.Services
 
             pst.ProductTypeId = productSubType.ProductTypeId;
             pst.Name = productSubType.Name;
+            pst.Link = productSubType.Link;
 
             await _adminContext.SaveChangesAsync();
 

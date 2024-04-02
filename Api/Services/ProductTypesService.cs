@@ -31,6 +31,7 @@ namespace Api.Services
 
             pt.ProductId = productType.ProductId;
             pt.Name = productType.Name;
+            pt.Link = productType.Link;
 
             await _adminContext.SaveChangesAsync();
 

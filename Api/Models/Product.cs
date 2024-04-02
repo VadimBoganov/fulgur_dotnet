@@ -11,5 +11,6 @@ namespace Api.Models
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
         public required string Name { get; set; }
+        public string? Link { get; set; }
     }
 }

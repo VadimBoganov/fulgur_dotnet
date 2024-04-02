@@ -44,7 +44,9 @@ namespace Api.Services
                 pi.ImageUrl = _configuration["FTP:Url"] + file.FileName;
             
             pi.Name = productItem.Name;
+            pi.ProductTypeId = productItem.ProductTypeId;
             pi.ProductSubTypeId = productItem.ProductSubTypeId;
+            pi.Link = productItem.Link;
 
             await _adminContext.SaveChangesAsync();
 

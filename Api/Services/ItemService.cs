@@ -51,6 +51,7 @@ namespace Api.Services
             item.IsFullPrice = inputItem.IsFullPrice;
             item.ProductItemId = inputItem.ProductItemId;
             item.Price = inputItem.Price;
+            item.Link = inputItem.Link;
 
             await _adminContext.SaveChangesAsync();
 
