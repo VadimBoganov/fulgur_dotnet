@@ -9,5 +9,6 @@ namespace Api.Services
         Task<IEnumerable<Item>> GetAll();
         Task<IEnumerable<Item>> GetByProductItemId(int id);
         Task<Item?> Update(Item inputItem);
+        Task<bool> BuldInsertAsync();
     }
 }
