@@ -80,6 +80,7 @@ builder.Services.AddScoped<IProductSubTypeService, ProductSubTypeService>();
 builder.Services.AddScoped<IProductItemService, ProductItemService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IContactRequestsService, ContactRequestsService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddFtpClient(builder.Configuration);
 

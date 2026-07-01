@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services
 {
-    public class ContactRequestsService(AdminContext adminContext) : IContactRequestsService
+    public class ContactRequestsService(AdminContext adminContext, IEmailService emailService) : IContactRequestsService
     {
         private readonly AdminContext _adminContext = adminContext;
+        private readonly IEmailService _emailService = emailService;
 
         public async Task<IEnumerable<ContactRequest>> GetAll() =>
             await _adminContext.ContactRequests.OrderByDescending(r => r.CreatedAt).ToListAsync();
@@ -19,6 +20,8 @@ namespace Api.Services
 
             _adminContext.ContactRequests.Add(request);
             await _adminContext.SaveChangesAsync();
+
+            await _emailService.SendContactRequestNotificationAsync(request);
 
             return request;
         }
