@@ -82,8 +82,6 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IContactRequestsService, ContactRequestsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-builder.Services.AddFtpClient(builder.Configuration);
-
 builder.Services.AddRouting(opts => opts.LowercaseUrls = true);
 
 var app = builder.Build();

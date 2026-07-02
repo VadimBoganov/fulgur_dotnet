@@ -1,14 +1,12 @@
 ﻿using Api.Models;
-using FluentFTP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.Configuration;
 
 namespace Api.Services
 {
-    public class ProductItemService(IConfiguration configuration, IAsyncFtpClient ftpClient, AdminContext adminContext) : IProductItemService
+    public class ProductItemService(IConfiguration configuration, AdminContext adminContext) : IProductItemService
     {
         private readonly AdminContext _adminContext = adminContext;
-        private readonly IAsyncFtpClient _ftpClient = ftpClient;
         private readonly IConfiguration _configuration = configuration;
 
         public async Task<IEnumerable<ProductItem>> GetAll() => await _adminContext.ProductItems.ToListAsync();
@@ -21,8 +19,8 @@ namespace Api.Services
 
             var file = productItem.File;
 
-            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
-                productItem.ImageUrl = _configuration["FTP:Url"] + file.FileName;
+            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
+                productItem.ImageUrl = _configuration["Images:Url"] + file.FileName;
 
             _adminContext.ProductItems.Add(productItem);
             await _adminContext.SaveChangesAsync();
@@ -40,8 +38,8 @@ namespace Api.Services
 
             var file = productItem.File;
 
-            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
-                pi.ImageUrl = _configuration["FTP:Url"] + file.FileName;
+            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
+                pi.ImageUrl = _configuration["Images:Url"] + file.FileName;
             
             pi.Name = productItem.Name;
             pi.ProductTypeId = productItem.ProductTypeId;

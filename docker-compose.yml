@@ -4,22 +4,22 @@ services:
       context: .
       dockerfile: Api/Dockerfile
     ports:
-      - "8080:8080"
+      - "5080:5080"
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 5080
       SQLITE_DB_PATH: /app/data/fulgur.db
       Auth__Issuer: fulgur
       Auth__Audience: https://gk-fulgur.ru
       Auth__SecretKey: ${AUTH_SECRET_KEY:?AUTH_SECRET_KEY is required}
-      FTP__Host: ${FTP_HOST:?FTP_HOST is required}
-      FTP__Username: ${FTP_USERNAME:?FTP_USERNAME is required}
-      FTP__Password: ${FTP_PASSWORD:?FTP_PASSWORD is required}
-      FTP__ImagePath: domains/gk-fulgur.ru/public_html/images/
-      FTP__Url: https://gk-fulgur.ru/images/
+      Images__StoragePath: /app/images
+      Images__Url: https://gk-fulgur.ru/images/
       Smtp__Password: ${SMTP_PASSWORD:?SMTP_PASSWORD is required}
     volumes:
       - fulgur-db:/app/data
+      - fulgur-images:/app/images
     restart: unless-stopped
 
 volumes:
   fulgur-db:
+  fulgur-images:

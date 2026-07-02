@@ -1,15 +1,13 @@
 ﻿using Api.Models;
-using FluentFTP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using System.ComponentModel;
 
 namespace Api.Services
 {
-    public class ItemService(IConfiguration configuration, ILogger<ItemService> logger, IAsyncFtpClient ftpClient, AdminContext adminContext) : IItemService
+    public class ItemService(IConfiguration configuration, ILogger<ItemService> logger, AdminContext adminContext) : IItemService
     {
         private readonly AdminContext _adminContext = adminContext;
-        private readonly IAsyncFtpClient _ftpClient = ftpClient;
         private readonly IConfiguration _configuration = configuration;
         private readonly ILogger<ItemService> _logger = logger;
 
@@ -23,9 +21,9 @@ namespace Api.Services
 
             var file = item.File;
 
-            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
+            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
             {
-                item.ImageUrl = _configuration["FTP:Url"] + file.FileName;
+                item.ImageUrl = _configuration["Images:Url"] + file.FileName;
 
                 _adminContext.Items.Add(item);
                 await _adminContext.SaveChangesAsync();
@@ -45,8 +43,8 @@ namespace Api.Services
 
             var file = inputItem.File;
 
-            if (file?.Length > 0 && await file.UploadToFtp(_ftpClient, _configuration["FTP:ImagePath"] ?? throw new InvalidConfigurationException("FTP image path is empty...")))
-                item.ImageUrl = _configuration["FTP:Url"] + file.FileName;
+            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
+                item.ImageUrl = _configuration["Images:Url"] + file.FileName;
 
             item.Name = inputItem.Name;
             item.IsFullPrice = inputItem.IsFullPrice;

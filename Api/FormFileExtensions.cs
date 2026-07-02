@@ -1,5 +1,4 @@
-﻿using FluentFTP;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Api
 {
@@ -8,19 +7,22 @@ namespace Api
         private const string REGEX_PATTERN = @"(.*\.)(jpe?g|png)$";
         private const RegexOptions REGEX_OPTIONS = RegexOptions.Multiline | RegexOptions.IgnoreCase;
 
-        public async static Task<bool> UploadToFtp(this IFormFile file, IAsyncFtpClient client, string path)
+        public async static Task<bool> SaveToDisk(this IFormFile file, string directoryPath)
         {
             var extension = Path.GetExtension(file.FileName);
 
-            if (!ImageExtensionRegex().IsMatch(extension)) 
+            if (!ImageExtensionRegex().IsMatch(extension))
                 return false;
 
-            var fullFtpPath = $"{path}{file.FileName}";
+            Directory.CreateDirectory(directoryPath);
 
-            var steam = file.OpenReadStream();
-            var status = await client.UploadStream(steam, fullFtpPath, FtpRemoteExists.Overwrite);
+            var fullPath = Path.Combine(directoryPath, file.FileName);
 
-            return status == FtpStatus.Success;
+            using var stream = file.OpenReadStream();
+            using var fileStream = File.Create(fullPath);
+            await stream.CopyToAsync(fileStream);
+
+            return true;
         }
 
         [GeneratedRegex(REGEX_PATTERN, REGEX_OPTIONS)]
