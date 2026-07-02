@@ -14,7 +14,8 @@ namespace Api.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=fulgur.db");
+            var dbPath = Environment.GetEnvironmentVariable("SQLITE_DB_PATH") ?? "fulgur.db";
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
     }
 }
