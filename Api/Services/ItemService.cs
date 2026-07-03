@@ -21,9 +21,13 @@ namespace Api.Services
 
             var file = item.File;
 
-            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
+            var storedName = file?.Length > 0
+                ? await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty..."))
+                : null;
+
+            if (storedName != null)
             {
-                item.ImageUrl = _configuration["Images:Url"] + file.FileName;
+                item.ImageUrl = _configuration["Images:Url"] + storedName;
 
                 _adminContext.Items.Add(item);
                 await _adminContext.SaveChangesAsync();
@@ -43,8 +47,12 @@ namespace Api.Services
 
             var file = inputItem.File;
 
-            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
-                item.ImageUrl = _configuration["Images:Url"] + file.FileName;
+            var storedName = file?.Length > 0
+                ? await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty..."))
+                : null;
+
+            if (storedName != null)
+                item.ImageUrl = _configuration["Images:Url"] + storedName;
 
             item.Name = inputItem.Name;
             item.IsFullPrice = inputItem.IsFullPrice;
@@ -67,45 +75,6 @@ namespace Api.Services
             await _adminContext.SaveChangesAsync();
 
             return item;
-        }
-
-        public async Task<bool> BuldInsertAsync()
-        {
-            var productItems = _adminContext.ProductItems.AsQueryable().Where(pi => pi.Id > 19);
-            
-            foreach(var pi in productItems)
-            {
-                List<Item> items =
-                [
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/prutok2.jpg", IsFullPrice = true, Link = "#", Name = "Пруток", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/lenta.jpg", IsFullPrice = true, Link = "#", Name = "Лента", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/chushka.jpg", IsFullPrice = true, Link = "#", Name = "Чушка", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/poroshok.jpg", IsFullPrice = true, Link = "#", Name = "Порошок", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/trubka.jpg", IsFullPrice = true, Link = "#", Name = "Трубка", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/slitok2.jpg", IsFullPrice = true, Link = "#", Name = "Слиток", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/provoloka2.jpg", IsFullPrice = true, Link = "#", Name = "Проволока", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/anod.jpg", IsFullPrice = true, Link = "#", Name = "Анод", Price = 33.3f, ProductItemId = pi.Id  },
-                    new Item { ImageUrl = "https://gk-fulgur.ru/images/folga.jpg", IsFullPrice = true, Link = "#", Name = "Фольга", Price = 33.3f, ProductItemId = pi.Id  },
-                ];
-
-                var res = await BulkInsertByProductItemAsync(items);
-                if (!res) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public async Task<bool> BulkInsertByProductItemAsync(IEnumerable<Item> items)
-        {
-            foreach (var item in items)
-            {
-                await _adminContext.Items.AddAsync(item);
-            }
-
-            return await _adminContext.SaveChangesAsync() > 0;
-
         }
     }
 }

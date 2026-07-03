@@ -19,8 +19,12 @@ namespace Api.Services
 
             var file = productItem.File;
 
-            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
-                productItem.ImageUrl = _configuration["Images:Url"] + file.FileName;
+            var storedName = file?.Length > 0
+                ? await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty..."))
+                : null;
+
+            if (storedName != null)
+                productItem.ImageUrl = _configuration["Images:Url"] + storedName;
 
             _adminContext.ProductItems.Add(productItem);
             await _adminContext.SaveChangesAsync();
@@ -38,9 +42,13 @@ namespace Api.Services
 
             var file = productItem.File;
 
-            if (file?.Length > 0 && await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty...")))
-                pi.ImageUrl = _configuration["Images:Url"] + file.FileName;
-            
+            var storedName = file?.Length > 0
+                ? await file.SaveToDisk(_configuration["Images:StoragePath"] ?? throw new InvalidConfigurationException("Images storage path is empty..."))
+                : null;
+
+            if (storedName != null)
+                pi.ImageUrl = _configuration["Images:Url"] + storedName;
+
             pi.Name = productItem.Name;
             pi.ProductTypeId = productItem.ProductTypeId;
             pi.ProductSubTypeId = productItem.ProductSubTypeId;

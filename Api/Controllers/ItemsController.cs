@@ -22,12 +22,6 @@ namespace Api.Controllers
             return item == null ? NotFound() : Ok(item);
         }
 
-        [HttpGet("test")]
-        public async Task AddData()
-        {
-            await _service.BuldInsertAsync();
-        }
-            
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<Item>> Add([FromForm] Item item) => CreatedAtAction(nameof(Add), await _service.Add(item));

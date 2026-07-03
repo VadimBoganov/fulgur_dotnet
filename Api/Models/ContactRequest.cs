@@ -18,12 +18,20 @@ namespace Api.Models
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(100, MinimumLength = 1)]
         public required string Name { get; set; }
 
+        [Required]
+        [EmailAddress]
+        [StringLength(200, MinimumLength = 3)]
         public required string Email { get; set; }
 
+        [StringLength(30)]
         public string? Phone { get; set; }
 
+        [Required]
+        [StringLength(2000, MinimumLength = 1)]
         public required string Message { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]

@@ -2,6 +2,7 @@ using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Controllers
 {
@@ -16,6 +17,7 @@ namespace Api.Controllers
         public async Task<IEnumerable<ContactRequest>> GetAll() => await _service.GetAll();
 
         [HttpPost]
+        [EnableRateLimiting("contact")]
         public async Task<ActionResult<ContactRequest>> Add(ContactRequest request)
         {
             var result = await _service.Add(request);
